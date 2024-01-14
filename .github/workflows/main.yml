@@ -1,0 +1,134 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  prepare_versioning:
+    name: Prepare Versioning
+    uses: mulecode/actions-workflow-templates/.github/workflows/workflow-versioning-prepare.yml@main
+    with:
+      configFilePath: vertere.yml
+
+  set_matrix:
+    name: Matrix of docker images
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ env.FOLDERS }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set Matrix Folders
+        id: set_matrix
+        run: |
+          FOLDERS=$(ls -d docker/*/ | sed 's/docker\///;s#/$##' | tr '\n' ' ' | sed 's/ /","/g' | sed 's/^/["/' | sed 's/$/"]/;s/,""//g')
+          echo "FOLDERS=$FOLDERS" >> $GITHUB_ENV
+
+  lint_validate:
+    name: Docker Lint
+    uses: mulecode/actions-workflow-templates/.github/workflows/workflow-docker-lint.yml@main
+    needs: set_matrix
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
+    with:
+      dockerfilePath: ./docker/${{ matrix.image }}/Dockerfile
+
+  vulnerabilities_scan:
+    name: Docker Vulnerability Scan
+    uses: mulecode/actions-workflow-templates/.github/workflows/workflow-docker-vulnerability-scan.yml@main
+    needs: set_matrix
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
+    with:
+      dockerImage: "ghcr.io/mulecode/tool-set-${{ matrix.image }}:${{ github.sha }}"
+      dockerfileDir: ./docker/${{ matrix.image }}
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  build:
+    name: Build and Publish docker images
+    runs-on: ubuntu-latest
+    needs:
+      - prepare_versioning
+      - set_matrix
+      - lint_validate
+      - vulnerabilities_scan
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Determine Changes
+        id: check_changes
+        run: |
+          FOLDER_PATH="docker/${{ matrix.image }}"
+          if git diff --quiet ${{ github.sha }}^! -- "$FOLDER_PATH"; then
+            echo "No changes detected in $FOLDER_PATH"
+            echo "CHANGED=FALSE" >> $GITHUB_ENV
+          else
+            echo "Detected changes in $FOLDER_PATH"
+            echo "CHANGED=TRUE" >> $GITHUB_ENV
+          fi
+      - name: Github Docker login
+        env:
+          # GitHub will generate the token for the actor
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          make docker_login
+      - name: Build Docker Image
+        if: ${{ env.CHANGED == 'TRUE' }}
+        run: |
+          echo "Building docker image ${{ matrix.image }}"
+          make docker_build IMAGE=${{ matrix.image }} TAG=${{ github.sha }}
+          make docker_tag IMAGE=${{ matrix.image }} TAG=${{ github.sha }} NEW_TAG=latest
+      - name: Push Docker Image
+        if: ${{ env.CHANGED == 'TRUE' }}
+        run: |
+          echo "Pushing docker image ${{ matrix.image }}"
+          make docker_push IMAGE=${{ matrix.image }} TAG=${{ github.sha }}
+          make docker_push IMAGE=${{ matrix.image }} TAG=latest
+      - name: Tag unchanged docker images
+        if: ${{ env.CHANGED == 'FALSE' }}
+        run: |
+          echo "Tagging unchanged docker image ${{ matrix.image }}"
+          make docker_pull IMAGE=${{ matrix.image }} TAG=latest
+          make docker_tag IMAGE=${{ matrix.image }} TAG=latest NEW_TAG=${{ github.sha }}
+          make docker_push IMAGE=${{ matrix.image }} TAG=${{ github.sha }}
+
+  artefact_versioning:
+    name: Artefact versioning
+    uses: mulecode/actions-workflow-templates/.github/workflows/workflow-docker-tag.yml@main
+    needs:
+      - prepare_versioning
+      - set_matrix
+      - build
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
+    with:
+      dockerImage: ghcr.io/mulecode/tool-set-${{ matrix.image }}
+      dockerTag: ${{ github.sha }}
+      dockerNewTag: ${{ needs.prepare_versioning.outputs.nextVersion }}
+    secrets:
+      dockerUsername: ${{ github.actor }}
+      dockerPassword: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    name: Release version
+    uses: mulecode/actions-workflow-templates/.github/workflows/workflow-release.yml@main
+    needs:
+      - prepare_versioning
+      - artefact_versioning
+    with:
+      changelogPath: CHANGELOG.md
+      nextVersion: ${{ needs.prepare_versioning.outputs.nextVersion }}
+    secrets:
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
