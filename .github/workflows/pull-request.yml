@@ -14,16 +14,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set Matrix Folders
+
+      - name: Get changed files
+        id: files
+        uses: jitterbit/get-changed-files@v1
+
+      - name: Set matrix docker folders
         id: set_matrix
         run: |
-          FOLDERS=$(ls -d docker/*/ | sed 's/docker\///;s#/$##' | tr '\n' ' ' | sed 's/ /","/g' | sed 's/^/["/' | sed 's/$/"]/;s/,""//g')
-          echo "FOLDERS=$FOLDERS" >> $GITHUB_ENV
+          FOLDERS=$(echo "${{ steps.files.outputs.all }}" | awk '{for(i=1;i<=NF;i++) if($i ~ /^docker/) {gsub(/^docker\//, "", $i); sub(/\/[^\/]*$/, "", $i); print "\"" $i "\""}}' | awk '!seen[$0]++')
+          JSON_FOLDERS="[$(echo "$FOLDERS" | tr '\n' ', ' | sed 's/,$//')]"
+          echo ">$JSON_FOLDERS"
+          echo "FOLDERS=$JSON_FOLDERS" >> $GITHUB_ENV
 
   lint_validate:
     name: Docker Lint
     uses: mulecode/actions-workflow-templates/.github/workflows/workflow-docker-lint.yml@main
-    needs: set_matrix
+    needs:
+      - set_matrix
     strategy:
       matrix:
         image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
@@ -33,12 +41,14 @@ jobs:
   vulnerabilities_scan:
     name: Docker Vulnerability Scan
     uses: mulecode/actions-workflow-templates/.github/workflows/workflow-docker-vulnerability-scan.yml@main
-    needs: set_matrix
+    needs:
+      - set_matrix
     strategy:
       matrix:
         image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
     with:
       dockerImage: "ghcr.io/mulecode/tool-set-${{ matrix.image }}:${{ github.sha }}"
       dockerfileDir: ./docker/${{ matrix.image }}
+      policyPath: ./docker/${{ matrix.image }}/.snyk
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

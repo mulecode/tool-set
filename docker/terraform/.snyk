@@ -1,0 +1,8 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.22.1
+
+ignore:
+    'SNYK-GOLANG-GOOGLEGOLANGORGPROTOBUFENCODINGPROTOJSON-6137908':
+        - '*':
+            reason: 'Cannot be fixed due terraform binary'
+            expires: '2024-05-01T00:00:00.000Z'
