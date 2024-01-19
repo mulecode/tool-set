@@ -1,0 +1,44 @@
+name: Pull Request
+
+on:
+  pull_request:
+    types: [ opened, edited, synchronize, labeled, unlabeled ]
+
+jobs:
+
+  set_matrix:
+    name: Matrix of docker images
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ env.FOLDERS }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set Matrix Folders
+        id: set_matrix
+        run: |
+          FOLDERS=$(ls -d docker/*/ | sed 's/docker\///;s#/$##' | tr '\n' ' ' | sed 's/ /","/g' | sed 's/^/["/' | sed 's/$/"]/;s/,""//g')
+          echo "FOLDERS=$FOLDERS" >> $GITHUB_ENV
+
+  lint_validate:
+    name: Docker Lint
+    uses: mulecode/actions-workflow-templates/.github/workflows/workflow-docker-lint.yml@main
+    needs: set_matrix
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
+    with:
+      dockerfilePath: ./docker/${{ matrix.image }}/Dockerfile
+
+  vulnerabilities_scan:
+    name: Docker Vulnerability Scan
+    uses: mulecode/actions-workflow-templates/.github/workflows/workflow-docker-vulnerability-scan.yml@main
+    needs: set_matrix
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.set_matrix.outputs.matrix) }}
+    with:
+      dockerImage: "ghcr.io/mulecode/tool-set-${{ matrix.image }}:${{ github.sha }}"
+      dockerfileDir: ./docker/${{ matrix.image }}
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
