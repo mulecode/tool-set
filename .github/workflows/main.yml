@@ -47,6 +47,7 @@ jobs:
     with:
       dockerImage: "ghcr.io/mulecode/tool-set-${{ matrix.image }}:${{ github.sha }}"
       dockerfileDir: ./docker/${{ matrix.image }}
+      policyPath: ./docker/${{ matrix.image }}/.snyk
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
