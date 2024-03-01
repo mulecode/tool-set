@@ -54,3 +54,5 @@ software products and features.
    development setups.
 
 ## Images
+
+- terraform 1.7.4

@@ -65,3 +65,11 @@ help: ## Display this help
 	  } /^##@/ { \
 	    printf "\n\033[1m%s\033[0m\n", substr($$0, 5) \
 	  } ' $(MAKEFILE_LIST)
+
+
+COMPOSE_RUN_TERRAFORM = docker-compose run --no-deps --rm terraform
+COMPOSE_RUN_TERRAFORM_MAKE = docker-compose run --no-deps --entrypoint "make" --rm terraform
+
+.PHONY: version
+version: ## Terraform version
+	$(COMPOSE_RUN_TERRAFORM) --version
