@@ -56,3 +56,4 @@ software products and features.
 ## Images
 
 - terraform 1.7.4
+- python-amazon 3.9.18
