@@ -1,3 +1,12 @@
+## 🚀 [1.0.3] - 11/02/2024
+
+### ✅ New Features
+
+- Java 21 OpenJDK: For building and executing java code shipped with:
+  - Maven 3.9.5
+
+---
+
 ## 🚀 [1.0.2] - 05/02/2024
 
 ### ✅ New Features

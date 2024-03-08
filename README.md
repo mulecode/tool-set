@@ -57,3 +57,4 @@ software products and features.
 
 - terraform 1.7.4
 - python-amazon 3.9.18
+- java - openJDK 21.0.2

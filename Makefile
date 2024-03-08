@@ -13,6 +13,7 @@ docker_login: ## Login to docker registry
 	echo $(GITHUB_TOKEN) | docker login ghcr.io -u mulecode --password-stdin
 
 .PHONY: docker_build
+docker_build: TAG = test
 docker_build: ## Build docker image
 	cd ./docker/$(IMAGE) && \
 	docker build -t $(DOCKER_REPO)$(IMAGE):$(TAG) .
