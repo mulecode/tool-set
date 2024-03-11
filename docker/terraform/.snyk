@@ -5,4 +5,12 @@ ignore:
     'SNYK-GOLANG-GOOGLEGOLANGORGPROTOBUFENCODINGPROTOJSON-6137908':
         - '*':
             reason: 'Cannot be fixed due terraform binary'
-            expires: '2024-05-01T00:00:00.000Z'
+            expires: '2024-08-01T00:00:00.000Z'
+    'SNYK-GOLANG-GOOGLEGOLANGORGPROTOBUFINTERNALENCODINGJSON-6393704':
+        - '*':
+            reason: 'Cannot be fixed due terraform binary'
+            expires: '2024-08-01T00:00:00.000Z'
+    'SNYK-GOLANG-GOOGLEGOLANGORGPROTOBUFENCODINGPROTOJSON-6393703':
+        - '*':
+            reason: 'Cannot be fixed due terraform binary'
+            expires: '2024-08-01T00:00:00.000Z'
