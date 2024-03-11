@@ -1,6 +1,6 @@
 ## Java 21 OpenJDK docker image
 
-This repository houses a Docker image equipped with OpenJDK 21 under alpine linux architecture, designed to be versatile
+This repository houses a Docker image equipped with OpenJDK 21 and maven under alpine linux architecture, designed to be versatile
 across different pipeline solutions.
 This image adheres to the [3musketeers](https://3musketeersdev.netlify.app) pattern, ensuring compatibility and
 promoting a standardized approach to tool usage.
