@@ -11,7 +11,7 @@
 ### ✅ New Features
 
 - Java 21 OpenJDK: For building and executing java code shipped with:
-    - Maven 3.9.5
+  - Maven 3.9.5
 
 ---
 
