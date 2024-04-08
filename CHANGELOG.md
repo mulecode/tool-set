@@ -1,3 +1,11 @@
+## 🚀 [1.0.4] - 08/04/2024
+
+### ✅ New Features
+
+- OpenAPI docker image with openAPI schema validator
+
+---
+
 ## 🚀 [1.0.3] - 11/02/2024
 
 ### ✅ New Features
