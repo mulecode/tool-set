@@ -1,9 +1,17 @@
+## 🚀 [1.0.4] - 08/04/2024
+
+### ✅ New Features
+
+- OpenAPI docker image with openAPI schema validator
+
+---
+
 ## 🚀 [1.0.3] - 11/02/2024
 
 ### ✅ New Features
 
 - Java 21 OpenJDK: For building and executing java code shipped with:
-  - Maven 3.9.5
+    - Maven 3.9.5
 
 ---
 
