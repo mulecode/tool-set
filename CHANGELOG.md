@@ -1,3 +1,11 @@
+## 🚀 [1.0.5] - 10/04/2024
+
+### ✅ New Features
+
+- Python docker image with python 3.9.18 Amazon
+
+---
+
 ## 🚀 [1.0.4] - 08/04/2024
 
 ### ✅ New Features
@@ -11,7 +19,7 @@
 ### ✅ New Features
 
 - Java 21 OpenJDK: For building and executing java code shipped with:
-  - Maven 3.9.5
+    - Maven 3.9.5
 
 ---
 
