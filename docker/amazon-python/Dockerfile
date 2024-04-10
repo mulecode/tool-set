@@ -1,4 +1,8 @@
 FROM amazonlinux:2023.4.20240401.1
+
+LABEL org.opencontainers.image.source="https://github.com/mulecode/tool-set"
+LABEL org.opencontainers.image.description="Amazon Python 3.9 Tool-set"
+
 WORKDIR /opt/app
 
 # Updates yum
@@ -22,15 +26,19 @@ RUN yum -y update && \
     rm -rf /var/cache
 
 # install python 3
-RUN wget -q https://www.python.org/ftp/python/3.9.19/Python-3.9.19.tgz && \
-    tar -xvf Python-3.9.19.tgz && \
-    cd Python-*/ && ./configure --enable-optimizations --enable-loadable-sqlite-extensions --with-ensurepip=install && make && make install && \
-    cd ../ && rm -rf Python-*
+RUN wget -q https://www.python.org/ftp/python/3.9.19/Python-3.9.19.tgz && tar -xvf Python-3.9.19.tgz
+
+WORKDIR /opt/app/Python-3.9.19
+
+RUN ./configure --enable-optimizations --enable-loadable-sqlite-extensions --with-ensurepip=install && make && make install
+
+WORKDIR /opt/app
+
+RUN rm -rf Python-*
 
 # Install pip
-RUN python3 -m pip install --upgrade pip==24.0
-# Install Black formatter
-RUN pip3 install --no-cache-dir black==24.3.0
+RUN python3 -m pip install --no-cache-dir --upgrade pip==24.0 && \
+    pip3 install --no-cache-dir black==24.3.0
 
 # Image command entry point
 ENTRYPOINT ["python3"]
