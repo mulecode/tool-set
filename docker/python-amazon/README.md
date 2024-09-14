@@ -1,8 +1,7 @@
-## Python Amazon 3.9.17 docker image
+## Python Amazon 3.9.19 docker image
 
 This repository houses a Docker image equipped with Python under amazon linux architecture, designed to be versatile
-across different pipeline
-solutions.
+across different pipeline solutions.
 This image adheres to the [3musketeers](https://3musketeersdev.netlify.app) pattern, ensuring compatibility and
 promoting a standardized approach to tool usage.
 
@@ -46,3 +45,13 @@ _version_make:
 	@echo "Python version with make pattern"
 	@python3 --version
 ```
+
+## Docker run commands
+
+Python version
+
+```bash
+docker run -it --rm ghcr.io/mulecode/tool-set-python-amazon:latest --version
+```
+
+
