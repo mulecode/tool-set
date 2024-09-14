@@ -1,3 +1,33 @@
+## 🚀 [1.1.0] - 10/04/2024
+
+### ✅ New Features
+
+- tool-set-python-playwright: ubuntu:24.10 docker image
+    - Python 3.12.5
+    - Python Black Formater
+    - including Python Black formatter 24.8.0
+    - including Python Playwright for web testing 1.45.1
+- tool-set-node: 22.4.0 docker image
+    - chromium
+    - make
+    - npm@10.8.3
+    - @angular/cli@18
+    - @aws-amplify/cli@12.12.6
+
+### 🔄 Enhancements
+
+- tool-set-python-amazon:
+    - python from 3.9.18 to 3.9.19
+    - base image amazonlinux:2023.4.20240401.1
+
+### 🚨 Removals
+
+- echo-ipsum: Test image
+- loren-ipsum: Test image
+- amazon-python: Duplicated image - use python-amazon instead
+
+---
+
 ## 🚀 [1.0.5] - 10/04/2024
 
 ### ✅ New Features
