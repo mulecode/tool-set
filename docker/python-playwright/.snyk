@@ -1,0 +1,23 @@
+# .snyk
+
+ignore:
+  SNYK-UPSTREAM-NODE-7430907:
+    - '*':
+        reason: "No upgrade or patch available"
+        expires: "2024-12-31T23:59:59Z"
+  SNYK-UPSTREAM-NODE-7430909:
+    - '*':
+        reason: "No upgrade or patch available"
+        expires: "2024-12-31T23:59:59Z"
+  SNYK-UPSTREAM-NODE-7430912:
+    - '*':
+        reason: "No upgrade or patch available"
+        expires: "2024-12-31T23:59:59Z"
+  SNYK-UPSTREAM-NODE-7430900:
+    - '*':
+        reason: "No upgrade or patch available"
+        expires: "2024-12-31T23:59:59Z"
+  SNYK-UPSTREAM-NODE-7430905:
+    - '*':
+        reason: "No upgrade or patch available"
+        expires: "2024-12-31T23:59:59Z"

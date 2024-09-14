@@ -14,18 +14,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Get changed files
-        id: files
-        uses: jitterbit/get-changed-files@v1
-
-      - name: Set matrix docker folders
+      - name: Set Matrix Folders
         id: set_matrix
         run: |
-          FOLDERS=$(echo "${{ steps.files.outputs.all }}" | awk '{for(i=1;i<=NF;i++) if($i ~ /^docker/) {gsub(/^docker\//, "", $i); sub(/\/[^\/]*$/, "", $i); print "\"" $i "\""}}' | awk '!seen[$0]++')
-          JSON_FOLDERS="[$(echo "$FOLDERS" | tr '\n' ', ' | sed 's/,$//')]"
-          echo ">$JSON_FOLDERS"
-          echo "FOLDERS=$JSON_FOLDERS" >> $GITHUB_ENV
+          FOLDERS=$(ls -d docker/*/ | sed 's/docker\///;s#/$##' | tr '\n' ' ' | sed 's/ /","/g' | sed 's/^/["/' | sed 's/$/"]/;s/,""//g')
+          echo "FOLDERS=$FOLDERS" >> $GITHUB_ENV
 
   lint_validate:
     name: Docker Lint
