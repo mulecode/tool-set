@@ -16,6 +16,7 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
      build-essential=12.10ubuntu1 \
+     nodejs=20.16.0+dfsg-1ubuntu1 \
      make=4.3-4.1build2 \
      zip=3.0-14 \
      tar=1.35+dfsg-3build1 \
