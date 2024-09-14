@@ -1,7 +1,8 @@
-## Python 3.9 docker image
+## Python 3.12 Playwright docker image
 
-This repository houses a Docker image equipped with Python 3.9 under Amazon linux architecture, designed to be versatile
-across different pipeline solutions.
+This repository houses a Docker image equipped with Python 3.12 and Playwright under Ubuntu linux architecture, 
+designed to be versatile across different pipeline solutions.
+
 This image adheres to the [3musketeers](https://3musketeersdev.netlify.app) pattern, ensuring compatibility and
 promoting a standardized approach to tool usage.
 
@@ -15,8 +16,8 @@ docker-compose.yml
 version: '3'
 
 services:
-  python:
-    image: ghcr.io/mulecode/tool-set-amazon-python:latest
+  python-playwright:
+    image: ghcr.io/mulecode/tool-set-python-playwright:latest
     working_dir: /opt/app
     volumes:
       - .:/opt/app
@@ -30,16 +31,16 @@ services:
 Makefile
 
 ```makefile
-COMPOSE_RUN_PYTHON3_9 = docker-compose run --no-deps --rm python
-COMPOSE_RUN_PYTHON3_9_MAKE = docker-compose run --no-deps --entrypoint "make" --rm python
+COMPOSE_RUN_ALPINE = docker-compose run --no-deps --rm python-playwright
+COMPOSE_RUN_ALPINE_MAKE = docker-compose run --no-deps --entrypoint "make" --rm python-playwright
 
 .PHONY: version
-version: ## Prints current version
-	$(COMPOSE_RUN_PYTHON3_9)
+version: ## Prints current version of python
+	$(COMPOSE_RUN_ALPINE)
 	
 .PHONY: version_make
 version_make: ## Version with make pattern
-	$(COMPOSE_RUN_PYTHON3_9_MAKE) -C $(MODULE_PATH) _version_make
+	$(COMPOSE_RUN_ALPINE_MAKE) -C $(MODULE_PATH) _version_make
 
 _version_make:
 	@python3 --version
@@ -50,7 +51,7 @@ _version_make:
 Python version
 
 ```bash
-docker run -it --rm ghcr.io/mulecode/tool-set-amazon-python:latest --version
+docker run -it --rm ghcr.io/mulecode/tool-set-alpine-python:latest --version
 ```
 
 
