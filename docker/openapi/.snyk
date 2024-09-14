@@ -1,0 +1,11 @@
+# .snyk
+
+ignore:
+  SNYK-JS-INFLIGHT-6095116:
+    - '*':
+        reason: "No upgrade or patch available"
+        expires: "2024-12-31T23:59:59Z"
+  SNYK-JS-RAILROADDIAGRAMS-6282875:
+    - '*':
+        reason: "No upgrade or patch available"
+        expires: "2024-12-31T23:59:59Z"

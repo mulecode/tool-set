@@ -1,11 +1,11 @@
-FROM amazonlinux:2023.4.20240401.1
+FROM amazonlinux:2023.5.20240903.0
 
 LABEL org.opencontainers.image.source="https://github.com/mulecode/tool-set"
 LABEL org.opencontainers.image.description="Python 3.9.19 Tool-set"
 
 ENV PYTHON_VERSION=3.9.18
-ENV BLACK_VERSION=23.3.0
-ENV PIP_VERSION=24.0
+ENV BLACK_VERSION=24.8.0
+ENV PIP_VERSION=24.2
 
 WORKDIR /opt/app
 
