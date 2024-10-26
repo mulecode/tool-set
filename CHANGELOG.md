@@ -3,6 +3,13 @@
 ### ✅ New Features
 
 - tool-set-terraform-mod
+    - update aws provider 5.73.0
+
+## 🚀 [1.7.0] - 13/10/2024
+
+### ✅ New Features
+
+- tool-set-terraform-mod
     - with aws-policy module
     - with aws-role module
     - with aws-api-gateway module
